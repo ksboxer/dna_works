@@ -14,7 +14,7 @@ Created on Sun Apr 10 15:37:57 2016
 import random
 
 class DnaAligner:
-
+    
 
     def align_initialize(self,dna2, dna1):
         full_matrix = []
@@ -138,18 +138,18 @@ class DnaAligner:
             direction = (self.find_min_direction(self.find_mins(self.find_min_value(possible_mins), possible_mins)))[1]
             print  (direction )       
             if direction == 'diagonal':
-                print ('diagonal_test')
+                #print ('diagonal_test')
                 dna_1_fin = dna1[j] + dna_1_fin
                 dna_2_fin = dna2[i] + dna_2_fin
                 i = i -1
                 j = j -1
             elif direction == 'up':
-                print ('up_test')
+               # print ('up_test')
                 dna_1_fin = '-' + dna_1_fin
                 dna_2_fin = dna2[i] + dna_2_fin
                 i = i -1
             else:
-                print ('left_test')
+               # print ('left_test')
                 dna_1_fin = dna1[j] + dna_1_fin
                 dna_2_fin = '-' + dna_2_fin 
                 j = j-1
@@ -160,7 +160,7 @@ class DnaAligner:
     
     
     
-    
+'''   
     
 s1 = "MKNLASREVNIYVNGKLV"
 s2= "QMASREVNIYVNGKL"
@@ -170,7 +170,7 @@ fin_mat_D,fin_mat_I,fin_mat_M = dna_tool.dna_align(s1,s2)
 dna1, dna2 = dna_tool.backtrack(fin_mat_D,fin_mat_I,fin_mat_M, s1,s2)
 merged_dna = dna_tool.merge(dna1, dna2)
 print(merged_dna)
-
+'''
 
 
 '''
@@ -186,17 +186,7 @@ print(merge(tuple[0], tuple[1]))
 #seq=difflib.SequenceMatcher(estimated_a,actual_a)
 #print (seq.ratio())
 
-#
-import pprint
-#pprint.pprint(pprint_mat)
-                    
-                
-            
 
-
-#
-import pprint
-#pprint.pprint(pprint_mat)
                     
                 
             
