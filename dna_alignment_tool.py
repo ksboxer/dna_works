@@ -25,19 +25,54 @@ def align_initialize(dna2, dna1):
     return full_matrix
 
 def dna_align(dna1, dna2):
-    full_matrix = align_initialize(dna1, dna2)
+    '''
+   full_matrix = align_initialize(dna1, dna2)
     dna1 = " "+ dna1
     dna2 = " "+ dna2
     for i in range(1, len(full_matrix)):
         for j in range(1, len(full_matrix[0])):
-            match_score = 1
+           match_score = 1
+    
             if dna1[j] == dna2[i]:
                 match_score = 0
             full_matrix[i][j] = min([full_matrix[i-1][j-1]+ match_score, # diagonal
                         full_matrix[i-1][j] + 1,
                         full_matrix[i][j-1]+1])
     return full_matrix
+    '''
+    full_matrix_D = align_initialize(dna1, dna2)
+    full_matrix_I = align_initialize(dna1, dna2)
+    full_matrix_M = align_initialize(dna1, dna2)
     
+    dna1 = " "+ dna1
+    dna2 = " "+ dna2
+    
+    gap_open=1;
+    gap_extend=0.5;
+           
+    for i in range(1, len(full_matrix_D)):
+        for j in range(1, len(full_matrix_D[0])):
+            
+           
+            match_score = 1
+    
+            if dna1[j] == dna2[i]:
+                match_score = 0
+                
+            full_matrix_D[i][j] = min([full_matrix_D[i][j-1]+ gap_extend , # 
+                        full_matrix_I[i][j-1] + gap_open,
+                        full_matrix_M[i][j-1]+gap_open])
+                        
+            full_matrix_I[i][j] = min([full_matrix_D[i-1][j]+ gap_open, # 
+                        full_matrix_I[i-1][j] + gap_extend,
+                        full_matrix_M[i-1][j]+gap_open])
+                        
+            full_matrix_M[i][j] = min([full_matrix_D[i-1][j-1]+ match_score, # diagonal
+                        full_matrix_I[i-1][j-1] + match_score,
+                        full_matrix_M[i-1][j-1]+match_score])
+                        
+                        
+    return (full_matrix_D, full_matrix_I,full_matrix_M)
 import random
 
 def find_min_direction(min_list):
@@ -67,21 +102,24 @@ def find_min_value(l):
             val_max = element[0]
     return val_max
     
-def backtrack(full_matrix,dna1, dna2):
+def backtrack(full_matrix_D,full_matrix_I,full_matrix_M ,dna1, dna2):
     dna1 = " "+ dna1
     dna2 = " " + dna2
     dna_1_fin = ''
     dna_2_fin = ''
-    i = len(full_matrix)-1
-    j = len(full_matrix[0]) -1
+    i = len(full_matrix_D)-1
+    j = len(full_matrix_D[0]) -1
     while(i > 0 or j > 0):
         possible_mins= []
         if i >0 :
-            possible_mins.append([full_matrix[i-1][j], "up"])
+            possible_mins.append([min(full_matrix_D[i-1][j],full_matrix_I[i-1][j],full_matrix_M[i-1][j])
+                                              ,"up"])
         if j > 0:
-            possible_mins.append([full_matrix[i][j-1], "left"])
+            possible_mins.append([min(full_matrix_D[i][j-1],full_matrix_I[i][j-1],full_matrix_M[i][j-1])
+                                            , "left"])
         if i > 0 and j > 0:
-            possible_mins.append([full_matrix[i-1][j-1], "diagonal"])
+            possible_mins.append([min (full_matrix_D[i-1][j-1],full_matrix_I[i-1][j-1],full_matrix_M[i-1][j-1])
+                                          ,"diagonal"])
         
         direction = (find_min_direction(find_mins(find_min_value(possible_mins), possible_mins)))[1]
         print  (direction )       
@@ -103,17 +141,8 @@ def backtrack(full_matrix,dna1, dna2):
             j = j-1
     return dna_1_fin, dna_2_fin
             
-    
-#estimated_a=print(estimated_a)
-#seq=difflib.SequenceMatcher(estimated_a,actual_a)
-#print (seq.ratio())
 
-#
-import pprint
-#pprint.pprint(pprint_mat)
-                    
-                
-            
+
 
 #s1 is horizontal string
 #s2 is vertical string
@@ -131,12 +160,44 @@ def merge (s1,s2):
                 s3=s3+s1[i]
             else:
                 s3=s3+s2[i]
-    return (s3)
+    return (s3) 
     
-results = []
+    
+    
+    
+    
+    
+    
+dna1 = "MKNLASREVNIYVNGKLV"
+dna2= "QMASREVNIYVNGKL"
 
-for row in value_dict:
-    full_mat = dna_align(row['b'], row['c'])
+fin_mat_D,fin_mat_I,fin_mat_M = dna_align(dna1, dna2)
+tuple=backtrack(fin_mat_D,fin_mat_I,fin_mat_M , dna1 , dna2)
+print(tuple[0])
+print(tuple[1])
+print(merge(tuple[0], tuple[1]))
+#estimated_a=print(estimated_a)
+#seq=difflib.SequenceMatcher(estimated_a,actual_a)
+#print (seq.ratio())
+
+#
+import pprint
+#pprint.pprint(pprint_mat)
+                    
+                
+            
+
+
+#
+import pprint
+#pprint.pprint(pprint_mat)
+                    
+                
+            
+
+
+    
+
     
     
     
