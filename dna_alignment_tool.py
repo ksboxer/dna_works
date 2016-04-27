@@ -29,6 +29,21 @@ class DnaAligner:
                     full_matrix[i][j]=0
         return full_matrix
 
+
+    def align_initialize_local(self,dna2, dna1):
+        full_matrix = []
+        for i in range(len(dna1)+1):
+            full_matrix.append([0]*(len(dna2)+1))
+            for j in range(len(dna2)+1):
+                if i == 0:
+                    full_matrix[i][j] = 0
+                elif j == 0:
+                    full_matrix[i][j] = 0
+                else:
+                    full_matrix[i][j]=0
+        return full_matrix
+        
+#global alignment
     def dna_align(self, dna1, dna2):
         full_matrix_D = self.align_initialize(dna1, dna2)
         full_matrix_I = self.align_initialize(dna1, dna2)
@@ -63,8 +78,63 @@ class DnaAligner:
                             
                             
         return (full_matrix_D, full_matrix_I,full_matrix_M)
-        
 
+
+   #local alignment
+   # returns the best_score and opt_loc'
+
+    def dna_align_local(self, dna1, dna2):
+        full_matrix_D = self.align_initialize_local(dna1, dna2)
+        full_matrix_I = self.align_initialize_local(dna1, dna2)
+        full_matrix_M = self.align_initialize_local(dna1, dna2)
+        
+        dna1 = " "+ dna1
+        dna2 = " "+ dna2
+        
+        gap_open=-1
+        gap_extend=-0.5
+        
+        best_score=0
+        opt_loc=(0,0)
+               
+        for i in range(1, len(full_matrix_D)):
+            for j in range(1, len(full_matrix_D[0])):
+                
+               
+                match_score = -1 #for mismatch
+        
+                if dna1[j] == dna2[i]:
+                    match_score = 0
+                    
+                full_matrix_D[i][j] = max([full_matrix_D[i][j-1]+ gap_extend , # 
+                            full_matrix_I[i][j-1] + gap_open,
+                            full_matrix_M[i][j-1]+gap_open, 0])
+                            
+                                
+                if (full_matrix_D[i][j] > best_score):
+                    best_score=full_matrix_D[i][j]
+                    opt_loc=(i,j)
+                            
+                full_matrix_I[i][j] = max([full_matrix_D[i-1][j]+ gap_open, # 
+                            full_matrix_I[i-1][j] + gap_extend,
+                            full_matrix_M[i-1][j]+gap_open,0])
+                                
+                
+                if (full_matrix_I[i][j] > best_score):
+                    best_score=full_matrix_I[i][j]
+                    opt_loc=(i,j)
+                            
+                full_matrix_M[i][j] = max([full_matrix_D[i-1][j-1]+ match_score, # diagonal
+                            full_matrix_I[i-1][j-1] + match_score,
+                            full_matrix_M[i-1][j-1]+match_score, 0])
+                                
+                if (full_matrix_D[i][j] > best_score) :
+                    best_score=full_matrix_M[i][j]
+                    opt_loc=(i,j)
+                            
+        #return (full_matrix_D, full_matrix_I,full_matrix_M)          
+        return (best_score, opt_loc)
+         
 
     def find_min_direction(self,min_list):
         if len(min_list) == 1:
@@ -160,13 +230,17 @@ class DnaAligner:
     
     
     
-'''   
+ 
     
 s1 = "MKNLASREVNIYVNGKLV"
 s2= "QMASREVNIYVNGKL"
+#s2="AABBFF"
 
 dna_tool = DnaAligner()
-fin_mat_D,fin_mat_I,fin_mat_M = dna_tool.dna_align(s1,s2)
+best_score, opt_loc =  dna_tool.dna_align_local(s1,s2)
+print(best_score)
+'''
+fin_mat_D,fin_mat_I,fin_mat_M = dna_tool.dna_align_local(s1,s2)
 dna1, dna2 = dna_tool.backtrack(fin_mat_D,fin_mat_I,fin_mat_M, s1,s2)
 merged_dna = dna_tool.merge(dna1, dna2)
 print(merged_dna)

@@ -17,6 +17,9 @@ with open(path_dna) as data_file:
 
 #st1 = dna_data['data'][0]['b']
 #st2 = dna_data['data'][0]['c']
+
+
+'''
 st1="a"
 st2="b"
 for i in range (4000):
@@ -25,6 +28,7 @@ for i in range (4000):
     
 for i in range (4000):
     st2=st2+"a"
+'''
     
 dna_tool = DnaAligner()
 
