@@ -24,6 +24,6 @@ dna1, dna2 = dna_tool.backtrack(dna_a_mat, st1,st2)
 merged_dna = dna_tool.merge(dna1, dna2)
 
 
-#dist_tool = DistanceMethods()
-#dist_tool.damerau_levenshtein_distance(merged_dna, dna_data['data'][0]['a'])
+dist_tool = DistanceMethods()
+distance = dist_tool.levenshtein(merged_dna, dna_data['data'][0]['a'])
 
