@@ -12,13 +12,18 @@ Created on Sat Apr 09 22:04:19 2016
 @author: Kate
 """
 
+
+from read_in_bosom import BlosumMat
+
 def n_lower_chars(string):
     return sum(1 for c in string if c.islower())
 
-file_dna = open('C:\Users\Kate\Desktop\chr19.txt')
-dna_sequence = file_dna.read()
-dna_extract= dna_sequence[15988834:16008884]
-dna_extract = dna_extract.replace('\n','')
+file_dna = open('sample_amino_acid_sequence.txt')
+dna_sequence = ((file_dna.read()).split('\n'))
+print len(dna_sequence)
+del dna_sequence[0]
+dna_extract = ''.join(dna_sequence)
+#print dna_extract
 
 uppercasedna = ''
 for nuc in dna_extract:
@@ -31,18 +36,23 @@ import random
 len(uppercasedna)
 
 
-def transition(val_same, NUC):
-    nucleotide_string = 'ACGT'
-    nuc_temp = nucleotide_string.replace(NUC,'')
+def transition(aa_dict, NUC):
+    nucleotide_string = 'ACDEFGHIKLMNPQRSTVWY'
+    #nuc_temp = nucleotide_string.replace(NUC,'')
     rand_float = random.random()
-    if (rand_float < val_same):
+    total_prob = 0.0
+    for aa in nucleotide_string:
+        total_prob = total_prob + aa_dict[nuc+','+aa]
+        if rand_float <= total_prob:
+            return aa
+ '''   if (rand_float < val_same):
         return NUC
     elif (1-val_same)/3.0 < rand_float:
         return nuc_temp[0]
     elif  ((1-val_same)/3.0)*2 < rand_float:
         return nuc_temp[1]
     else:
-        return nuc_temp[2]
+        return nuc_temp[2]'''
     
     
 
@@ -73,12 +83,15 @@ def jukes_cantor(rt, time):
     return [[x,y,y,y],[y,x,y,y],[y,y,x,y],[y,y,y,x]]
     
 value_dict = []
+
+b = BlosumMat()
+aa_dict =  b.read_in()
  
-for rate in [.01,.05,.1,.15,.2,.25,.3,.35,.4,.45,.5,.55,.6,.65,.7,.75,.8,.85,.9]:
-    for time in [1,2,3,4,5]:
-        for indelrate in [100,200,300,400,500,1000,2000,3000]:
-            jukes = jukes_cantor(rate,time)
-            jukes_ex = jukes[0][0]
+for rates in aa_dict.keys():
+    for indelrate in [100,200,300,400,500,1000,2000,3000]:
+            #jukes = jukes_cantor(rate,time)
+            ##jukes_ex = jukes[0][0]
+            bosom_arr + aa_dict[rates]
             new_seq = ''
             seq_holder = ''
             new_seq_2 = ''
