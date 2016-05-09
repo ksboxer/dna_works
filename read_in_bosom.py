@@ -10,7 +10,7 @@ import glob
 
 class BlosumMat:
         
-        path = 'blosum_mat\\*.qij'
+        path = 'C:\\Users\\Kate\\Desktop\\Computational Genomics\\final_project\\blosum_mat\\*.bla'
         def read_in(self):
             file_names = glob.glob(self.path)
             full_blosom_dict = {}
@@ -40,7 +40,7 @@ class BlosumMat:
                                 aa_dict[index_aa[idx_full]+','+index_aa[idx]] = prob
                                 aa_dict[index_aa[idx]+','+index_aa[idx_full]] = prob
                             idx_full = idx_full +1
-                full_blosom_dict[file_name[11:len(file_name)-4]] = aa_dict
+                full_blosom_dict[file_name[70:len(file_name)-4]] = aa_dict
             return full_blosom_dict
                             
                         

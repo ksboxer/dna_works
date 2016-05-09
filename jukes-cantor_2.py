@@ -86,9 +86,62 @@ value_dict = []
 
 b = BlosumMat()
 aa_dict =  b.read_in()
+
+def create_seq(blosum, seq, indelrate):
+     for n in seq:
+                    transition_1 = transition(blosum, n)
+                    transition_2 = transition(blosum, n)
+                    new_seq = new_seq + transition_1
+                    new_seq_2 = new_seq_2 + transition_2
+                    if transition_1 == n:
+                        seq_holder = seq_holder + 'C'
+                    else:
+                        seq_holder = seq_holder + 'S'
+                    if transition_2 == n:
+                        seq_holder_2 = seq_holder_2 + 'C'
+                    else:
+                        seq_holder_2 = seq_holder_2 + 'S'
+                    ran_holder = random.random()
+                    #print ran_holder, prob_dem
+                    if ran_holder < prob_dem:
+                        #print ran_holder
+                        if random.random() < .29:
+                            rand_insert = int(abs(random.normalvariate(3.63, 4.66)))
+                            #print rand_insert
+                            insertion = generateinsertion(rand_insert)
+                            new_seq= new_seq +insertion
+                            seq_holder = seq_holder + 'I' * rand_insert
+                        else:
+                            random_del = int(abs(random.normalvariate(6.69, 15.04)))
+                            if random_del < len(new_seq) :
+                                print('-------1')
+                                print len(new_seq)
+                                new_seq = new_seq[0:(len(new_seq)-random_del)]
+                                print len(new_seq)
+                                seq_holder = seq_holder + 'D' * random_del
+                    ran_holder = random.random()
+                    if ran_holder < prob_dem:
+                        if random.random() < .29:
+                            rand_insert  = int(abs(random.normalvariate(3.63, 4.66)))
+                            #print rand_insert                        
+                            new_seq_2= new_seq_2 +insertion
+                            seq_holder_2 = seq_holder_2 + 'I' * rand_insert
+                        else:
+                            random_del = int(abs(random.normalvariate(6.69, 15.04)))
+                            print random_del
+                            if random_del < len(new_seq_2) :
+                                #print('-------2')
+                                #print len(new_seq_2)
+                                new_seq_2 = new_seq_2[0:(len(new_seq_2)-random_del )]
+                                print len(new_seq_2)
+                                seq_holder_2 = seq_holder_2 + 'D' * random_del
+                print str(len(new_seq)) + ' , ' + str(len(new_seq_2))
+                value_dict.append({'rate': rate, 'time': time, 'indelrate': indelrate, 'a': uppercasedna, 'b': new_seq, 'c': new_seq_2, 'b_changes':seq_holder, 'c_changes': seq_holder_2, 'b_len': len(new_seq), 'c_len': len(new_seq_2), 'a_len': len(uppercasedna)})
+                               
+                               
  
 for rates in aa_dict.keys():
-    for indelrate in [100,200,300,400,500,1000,2000,3000]:
+    for indelrate in [25,50,100,200,300,400,500,1000,2000,3000]:
             #jukes = jukes_cantor(rate,time)
             ##jukes_ex = jukes[0][0]
             bosom_arr + aa_dict[rates]
@@ -98,56 +151,62 @@ for rates in aa_dict.keys():
             seq_holder_2 = ''
             prob_dem = (1.0/(indelrate / rate))
            # print prob_dem
-            for n in uppercasedna:
-                transition_1 = transition(jukes_ex, n)
-                transition_2 = transition(jukes_ex, n)
-                new_seq = new_seq + transition_1
-                new_seq_2 = new_seq_2 + transition_2
-                if transition_1 == n:
-                    seq_holder = seq_holder + 'C'
-                else:
-                    seq_holder = seq_holder + 'S'
-                if transition_2 == n:
-                    seq_holder_2 = seq_holder_2 + 'C'
-                else:
-                    seq_holder_2 = seq_holder_2 + 'S'
-                ran_holder = random.random()
-                #print ran_holder, prob_dem
-                if ran_holder < prob_dem:
-                    #print ran_holder
-                    if random.random() < .29:
-                        rand_insert = int(abs(random.normalvariate(3.63, 4.66)))
-                        #print rand_insert
-                        insertion = generateinsertion(rand_insert)
-                        new_seq= new_seq +insertion
-                        seq_holder = seq_holder + 'I' * rand_insert
+            total_internal = 0
+            total_external = 0
+            queue = [uppercasedna]
+            while total_internal < 4 and total_external < 6 and len(queue) > 0:
+                curr_dna = queue[0]
+                queue = queue[1:]
+                for n in curr_dna:
+                    transition_1 = transition(jukes_ex, n)
+                    transition_2 = transition(jukes_ex, n)
+                    new_seq = new_seq + transition_1
+                    new_seq_2 = new_seq_2 + transition_2
+                    if transition_1 == n:
+                        seq_holder = seq_holder + 'C'
                     else:
-                        random_del = int(abs(random.normalvariate(6.69, 15.04)))
-                        if random_del < len(new_seq) :
-                            print('-------1')
-                            print len(new_seq)
-                            new_seq = new_seq[0:(len(new_seq)-random_del)]
-                            print len(new_seq)
-                            seq_holder = seq_holder + 'D' * random_del
-                ran_holder = random.random()
-                if ran_holder < prob_dem:
-                    if random.random() < .29:
-                        rand_insert  = int(abs(random.normalvariate(3.63, 4.66)))
-                        #print rand_insert                        
-                        new_seq_2= new_seq_2 +insertion
-                        seq_holder_2 = seq_holder_2 + 'I' * rand_insert
+                        seq_holder = seq_holder + 'S'
+                    if transition_2 == n:
+                        seq_holder_2 = seq_holder_2 + 'C'
                     else:
-                        random_del = int(abs(random.normalvariate(6.69, 15.04)))
-                        print random_del
-                        if random_del < len(new_seq_2) :
-                            #print('-------2')
-                            #print len(new_seq_2)
-                            new_seq_2 = new_seq_2[0:(len(new_seq_2)-random_del )]
-                            print len(new_seq_2)
-                            seq_holder_2 = seq_holder_2 + 'D' * random_del
-            print str(len(new_seq)) + ' , ' + str(len(new_seq_2))
-            value_dict.append({'rate': rate, 'time': time, 'indelrate': indelrate, 'a': uppercasedna, 'b': new_seq, 'c': new_seq_2, 'b_changes':seq_holder, 'c_changes': seq_holder_2, 'b_len': len(new_seq), 'c_len': len(new_seq_2), 'a_len': len(uppercasedna)})
-                           
+                        seq_holder_2 = seq_holder_2 + 'S'
+                    ran_holder = random.random()
+                    #print ran_holder, prob_dem
+                    if ran_holder < prob_dem:
+                        #print ran_holder
+                        if random.random() < .29:
+                            rand_insert = int(abs(random.normalvariate(3.63, 4.66)))
+                            #print rand_insert
+                            insertion = generateinsertion(rand_insert)
+                            new_seq= new_seq +insertion
+                            seq_holder = seq_holder + 'I' * rand_insert
+                        else:
+                            random_del = int(abs(random.normalvariate(6.69, 15.04)))
+                            if random_del < len(new_seq) :
+                                print('-------1')
+                                print len(new_seq)
+                                new_seq = new_seq[0:(len(new_seq)-random_del)]
+                                print len(new_seq)
+                                seq_holder = seq_holder + 'D' * random_del
+                    ran_holder = random.random()
+                    if ran_holder < prob_dem:
+                        if random.random() < .29:
+                            rand_insert  = int(abs(random.normalvariate(3.63, 4.66)))
+                            #print rand_insert                        
+                            new_seq_2= new_seq_2 +insertion
+                            seq_holder_2 = seq_holder_2 + 'I' * rand_insert
+                        else:
+                            random_del = int(abs(random.normalvariate(6.69, 15.04)))
+                            print random_del
+                            if random_del < len(new_seq_2) :
+                                #print('-------2')
+                                #print len(new_seq_2)
+                                new_seq_2 = new_seq_2[0:(len(new_seq_2)-random_del )]
+                                print len(new_seq_2)
+                                seq_holder_2 = seq_holder_2 + 'D' * random_del
+                print str(len(new_seq)) + ' , ' + str(len(new_seq_2))
+                value_dict.append({'rate': rate, 'time': time, 'indelrate': indelrate, 'a': uppercasedna, 'b': new_seq, 'c': new_seq_2, 'b_changes':seq_holder, 'c_changes': seq_holder_2, 'b_len': len(new_seq), 'c_len': len(new_seq_2), 'a_len': len(uppercasedna)})
+                               
                     
                 
 example_dict = {}

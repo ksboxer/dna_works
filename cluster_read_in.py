@@ -37,17 +37,19 @@ def get_url(url):
 path = 'C:\\Users\\Kate\\Desktop\\Computational Genomics\\final_project\\cluster-information.txt'
 
 f = open(path, 'r')
-x = f.readlines()
+x = f.read()
+lines = x.split('\n')
 
 gene_animal_lookup = {}
 gene_animal_dictionary = {}
 gene_lookup_table = {}
 cluster_animal = {}
 
-for idx,cluster in enumerate(x):
+for idx,cluster in enumerate(lines):
     genes = cluster.split('\t')
     cluster_animal[idx] = {}
     for animal_info in genes:
+        print animal_info
         arr_info = animal_info.split("|")
         gene_animal_lookup[arr_info[1]] = arr_info[0]
         if arr_info[0] not in gene_animal_dictionary:
@@ -56,9 +58,10 @@ for idx,cluster in enumerate(x):
         if arr_info[1] not in gene_lookup_table:
             gene_lookup_table[arr_info[1]] = []
         gene_lookup_table[arr_info[1]].append(idx)
-        if animal_info[0] not in cluster_animal[idx]:
-            cluster_animal[idx][animal_info[0]] = []
-        cluster_animal[idx][animal_info[0]].append(animal_info[1])
+        if arr_info[0] not in cluster_animal[idx]:
+            print animal_info[0]
+            cluster_animal[idx][arr_info[0]] = []
+        cluster_animal[idx][arr_info[0]].append(arr_info[1])
         
 
 for key in gene_animal_dictionary.keys():
@@ -82,7 +85,7 @@ for cluster in cluster_animal.keys():
         if multi:
             cluster_same_species_count = cluster_same_species_count + 1
 
-list_collected = read_in_collected_genes()
+'''list_collected = read_in_collected_genes()
 
 full_p = 'C:\\Users\\Kate\\Desktop\\Computational Genomics\\final_project\\collected_amino_acids_seq\\'
 
@@ -106,7 +109,15 @@ for idx, id_ in enumerate(gene_animal_lookup.keys()):
                 print "dumped"
             write_collected_genes([org_id])
         except:
-            print 'exception: '+ id_
+            print 'exception: '+ id_ '''
+len_dict = {1:0, 2:0, 3:0, 4:0, 5:0,6:0}
+for key in cluster_animal.keys():
+    len_dict[len(cluster_animal[key])] = len_dict[len(cluster_animal[key])] +1
     
-    
+lengths = []
+freq = []
+for i in len_dict:
+    lengths.append(i)
+    freq.append(len_dict[i])
+
     

@@ -146,6 +146,7 @@ def doNeigJoin(mat, taxaList):
    # combine old taxa in taxa list to create new taxalist
    oldTaxaList = taxaList[:]
    oldTaxaList.remove(taxaList[taxaA])
+   print oldTaxaList
    oldTaxaList.remove(taxaList[taxaB])
    newTaxaList = [[taxaList[taxaA], taxaList[taxaB]]] + oldTaxaList
 
@@ -210,9 +211,7 @@ def createTree(mat, taxaList):
    return doNeigJoin(mat, taxaList)
 
 def main():
-   '''
-   The main function below is used for testing.
-   '''
+
 
    taxaList = ['A', 'B', 'C', 'D', 'E', 'F']
 
@@ -227,6 +226,7 @@ def main():
    mat[3][2] = 7
    mat[4][0] = 6
    mat[4][1] = 9
+   
    mat[4][2] = 6
    mat[4][3] = 5
    mat[5][0] = 8
